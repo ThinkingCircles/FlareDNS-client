@@ -4,6 +4,7 @@ namespace ThinkingCircles\FlareDNSClient;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
+use ThinkingCircles\FlareDNSClient\Console\Commands\FlareDNSClientSyncCommand;
 
 
 class FlareDNSClientServiceProvider extends ServiceProvider
