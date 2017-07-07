@@ -10,7 +10,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Carlos Garcia",
+            "name": "Carlos A Garcia",
             "email": "cgarcia@thinkingcircles.com",
             "homepage": "https://flaredns.thinkingcircles.com",
             "role": "Developer"
@@ -48,5 +48,5 @@
     },
     "config": {
         "sort-packages": true
-    },
+    }
 }
