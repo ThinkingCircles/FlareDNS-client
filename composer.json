@@ -1,10 +1,13 @@
 {
-    "name": "ThinkingCircles/FlareDNS-client",
+    "name": "thinkingcircles/flaredns-client",
     "type": "library",
     "description": ":package_description",
     "keywords": [
         "ThinkingCircles",
-        "FlareDNS-client"
+        "FlareDNS-client",
+        "DNS",
+        "CloudFlare",
+        "Dynamic IP"
     ],
     "homepage": "https://github.com/ThinkingCircles/FlareDNS-client",
     "license": "MIT",
