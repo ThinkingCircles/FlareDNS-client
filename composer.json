@@ -1,7 +1,7 @@
 {
     "name": "thinkingcircles/flaredns-client",
     "type": "library",
-    "description": ":package_description",
+    "description": "CloudFlare auto dns update",
     "keywords": [
         "ThinkingCircles",
         "FlareDNS-client",
@@ -31,12 +31,12 @@
     },
     "autoload": {
         "psr-4": {
-            "ThinkingCircles\\FlareDNS-client\\": "src"
+            "ThinkingCircles\\FlareDNSClient\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ThinkingCircles\\FlareDNS-client\\": "tests"
+            "ThinkingCircles\\FlareDNSClient\\": "tests/"
         }
     },
     "scripts": {
