@@ -5,7 +5,7 @@
         'cloudflare_global_api_key' => env('cloudflare_global_api_key', null),
         'cloudflare_api_email' => env('cloudflare_api_email', null),
         'dns_records' => [
-            ['id'=>null, 'name'=>'flaredns.thinkingcircles.com']
+            ['id'=>null, 'name'=>null]
         ]
     ]
 

@@ -31,12 +31,12 @@
     },
     "autoload": {
         "psr-4": {
-            "ThinkingCircles\\FlareDNSClient\\": "src/"
+            "ThinkingCircles\\FlarednsClient\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ThinkingCircles\\FlareDNSClient\\": "tests/"
+            "ThinkingCircles\\FlarednsClient\\": "tests/"
         }
     },
     "scripts": {
