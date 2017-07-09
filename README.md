@@ -11,6 +11,7 @@ Use this package if:
 
 ## Installation
 
+
 ```
 composer require thinkingcircles/flaredns-client
 
@@ -22,6 +23,7 @@ php artisan vendor:publish --provider="ThinkingCircles\FlareDNSClient\FlareDNSCl
 
 
 ## Configuration
+
 
 ```php
 // .env
@@ -64,6 +66,16 @@ cloudflare_api_email=
 
 ```
 
+
+## Cron Setup - [Laravel 5.4 - Scheduling](https://laravel.com/docs/5.4/scheduling)
+
+```
+// Cron if you have not setup already
+
+* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1
+```
+
+
 ## Usage
 
 ```php
@@ -80,6 +92,7 @@ protected function schedule(Schedule $schedule)
 ## Todo
 
 - [x] Debug
+- [ ] Clean up code
 - [ ] Improve logic 
 - [ ] Documentation
 - [ ] Make UI [FlareDNS Management UI](https://www.github.com/ThinkingCircles/FlareDNS "FlareDNS Management UI")

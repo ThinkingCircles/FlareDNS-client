@@ -1,7 +1,7 @@
 {
     "name": "thinkingcircles/flaredns-client",
     "type": "library",
-    "description": "CloudFlare auto dns update",
+    "description": "Synchronize your App dynamic IP with your CloudFlare DNS A records.",
     "keywords": [
         "ThinkingCircles",
         "FlareDNS-client",

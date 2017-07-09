@@ -1,6 +1,6 @@
 <?php
 namespace ThinkingCircles\FlareDNSClient;
-use Exception;
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7;
@@ -20,11 +20,12 @@ class FlareDNSClient
      */
     public function __construct()
     {
-        $apiAccountConfig = config('flaredns-client.cloudflare_api_account',  null); 
-        if($apiAccountConfig){
+        $apiAccountConfig = config('flaredns-client.cloudflare_api_account', null);
+        //print_r($apiAccountConfig);
+        if ($apiAccountConfig) {
             $this->apiAccount = (object) $apiAccountConfig;
         }
-       
+
     }
     /**
      * update records
@@ -34,96 +35,109 @@ class FlareDNSClient
     public function cloudflareSync()
     {
         $response = [];
-        if($this->apiAccount){
+        if ($this->apiAccount) {
             $listAllDNSRecordsRespond = $this->CloudFlare_DNS_Request('LIST', null, $this->apiAccount);
-            if(isset($listAllDNSRecordsRespond['success'])){
+            if (isset($listAllDNSRecordsRespond['success'])) {
                 
-                
-                if(is_array($this->apiAccount->dns_records)){
+                if (is_array($this->apiAccount->dns_records)) {
                     $ip = $this->dyn_IP_Get();
-                    if(!$ip || isset($ip['error'])){
+                    if (!$ip || isset($ip['error'])) {
                         $response = $ip;
-                        return $response; 
+
+                        return $response;
                     }
                     $ip = $ip;
-                    if(isset($this->apiAccount->dns_records['id']) || isset($this->apiAccount->dns_records['name'])){
-                        if( (isset($this->apiAccount->dns_records['id']) && $dnsRecord->id == $this->apiAccount->dns_records['id']) || 
-                            (isset($this->apiAccount->dns_records['name']) && $dnsRecord->name == $this->apiAccount->dns_records['name']) ){
+                    if (isset($this->apiAccount->dns_records['id']) || isset($this->apiAccount->dns_records['name'])) {
+                        
+                        if ((isset($this->apiAccount->dns_records['id']) && $dnsRecord->id == $this->apiAccount->dns_records['id']) ||
+                            (isset($this->apiAccount->dns_records['name']) && $dnsRecord->name == $this->apiAccount->dns_records['name'])) {
 
-                            foreach($listAllDNSRecordsRespond['success'] as $dnsRecord){
-                                if ($dnsRecord->type == 'A'){
-                                    if($dnsRecord->content != $ip){
+                            foreach ($listAllDNSRecordsRespond['success'] as $dnsRecord) {
+                                if ($dnsRecord->type == 'A') {
+                                    if ($dnsRecord->content != $ip) {
                                         $dnsRecord->content = $ip;
-                                        $response = $this->CloudFlare_DNS_Request('UPDATE', $dnsRecord, $this->apiAccount);
-                                        if($response){
-                                                if(isset($response['success'])){
-                                                    $response['success'][$dnsRecord->id] = $response['success'];
-                                                }else if(isset($response['error'])){
-                                                    $response['error'][$dnsRecord->id] = $response['error'];
-                                                }else{
-                                                    $response['error'][$dnsRecord->id] = 'Error !response[error || success]->cf_dns_request() Name=>'.$dnsRecord->name.' Content=>'.$dnsRecord->content;
-                                                }
-                                            }else{
-                                                $response['error'][$dnsRecord->id] = 'Error !response->cf_dns_request() Name=>'.$dnsRecord->name.' Content=>'.$dnsRecord->content;
+                                        $response           = $this->CloudFlare_DNS_Request('UPDATE', $dnsRecord, $this->apiAccount);
+                                        if ($response) {
+                                            if (isset($response['success'])) {
+                                                $response['success'][$dnsRecord->id] = $response['success'];
+                                            } else if (isset($response['error'])) {
+                                                $response['error'][$dnsRecord->id] = $response['error'];
+                                            } else {
+                                                $response['error'][$dnsRecord->id] = 'Error !response[error || success]->cf_dns_request() Name=>' . $dnsRecord->name . ' Content=>' . $dnsRecord->content;
                                             }
-                                    }else{
-                                        $response['success'] = 'Record is up to date. Name=>'.$dnsRecord->name.' Content=>'.$dnsRecord->content;
-                                    }
-                                }
-                            }
-
-                        }
-
-                    }else{
-                        foreach($listAllDNSRecordsRespond['success'] as $dnsRecord){
-                                if ($dnsRecord->type == 'A'){
-                        foreach ($this->apiAccount->dns_records as $key => $sync_dnsRecord) {
-                           
-                                    if(is_array($sync_dnsRecord)){  $sync_dnsRecord = (object) $sync_dnsRecord; }
-
-                                    if( (isset($sync_dnsRecord->id) && $dnsRecord->id == $sync_dnsRecord->id) || (isset($sync_dnsRecord->name) && $dnsRecord->name == $sync_dnsRecord->name) ){
-                                        if($dnsRecord->content != $ip){
-                                            $dnsRecord->content = $ip;
-                                            $response = $this->CloudFlare_DNS_Request('UPDATE', $dnsRecord, $this->apiAccount);
-                                            if($response){
-                                                if(is_object($response)){
-                                                    $response = (array)$response;
-                                                }
-                                                if(isset($response['success'])){
-                                                    $response['success'][$dnsRecord->id] = $response['success'];
-                                                }else if(isset($response['error'])){
-                                                    $response['error'][$dnsRecord->id] = $response['error'];
-                                                }else{
-                                                    $response['error'][$dnsRecord->id] = 'Error !response[error || success]->cf_dns_request() Name=>'.$dnsRecord->name.' Content=>'.$dnsRecord->content;
-                                                }
-                                            }else{
-                                                $response['error'][$dnsRecord->id] = 'Error !response->cf_dns_request() Name=>'.$dnsRecord->name.' Content=>'.$dnsRecord->content;
-                                            }
-                                             
-                                        }else{
-                                            $response['success'][$dnsRecord->id] = 'Record is up to date. Name=>'.$dnsRecord->name.' Content=>'.$dnsRecord->content;
+                                        } else {
+                                            $response['error'][$dnsRecord->id] = 'Error !response->cf_dns_request() Name=>' . $dnsRecord->name . ' Content=>' . $dnsRecord->content;
                                         }
+                                    } else {
+                                        $response['success'] = 'Record is up to date. Name=>' . $dnsRecord->name . ' Content=>' . $dnsRecord->content;
+                                    }
+                                }
+                            }
+
+                        }
+
+                    } else {
+
+                        foreach ($this->apiAccount->dns_records as $key => $sync_dnsRecord) {
+                            
+
+                            if (is_array($sync_dnsRecord)) {$sync_dnsRecord = (object) $sync_dnsRecord;}
+
+
+                            foreach ($listAllDNSRecordsRespond['success'] as $dnsRecord) {
+                                
+
+                                if ($dnsRecord->type == 'A') {
+                                    
+
+                                    if ((isset($sync_dnsRecord->id) && $dnsRecord->id == $sync_dnsRecord->id) || (isset($sync_dnsRecord->name) && $dnsRecord->name == $sync_dnsRecord->name)) {
                                         
+                                        if ($dnsRecord->content != $ip) {
+                                           
+                                            $dnsRecord->content = $ip;
+                                            $resp          = $this->CloudFlare_DNS_Request('UPDATE', $dnsRecord, $this->apiAccount);
+                                            if ($resp) {
+
+                                                
+
+                                                if (isset($resp['success'])) {
+                                                    $response['success'][$dnsRecord->id] = $resp['success'];
+                                                } else if (isset($resp['error'])) {
+                                                    $response['error'][$dnsRecord->id] = $resp['error'];
+                                                } else {
+                                                    $response['error'][$dnsRecord->id] = 'Error !response[error || success]->cf_dns_request() Name=>' . $dnsRecord->name . ' Content=>' . $dnsRecord->content;
+                                                }
+                                            } else {
+                                                $response['error'][$dnsRecord->id] = 'Error !response->cf_dns_request() Name=>' . $dnsRecord->name . ' Content=>' . $dnsRecord->content;
+                                            }
+
+                                        } else {
+                                            $response['success'][$dnsRecord->id] = 'Record is up to date. Name=>' . $dnsRecord->name . ' Content=>' . $dnsRecord->content;
+                                        }
+
+                                    }else{
+                                        $response['error'] = 'Unable to match an existing record on cloudflare';
                                     }
                                 }
                             }
                         }
-                    } 
-                
+                    }
+
+                } else {
+
                 }
-                    
-                
-            }else{
+
+            } else {
                 $response = $listAllDNSRecordsRespond;
             }
 
-        }else{
+        } else {
             $response['error'] = 'FlareDNS Client Config file (app/config/flaredns-client.php) not set.';
         }
         
+
         return $response;
     }
-    
 
     public function CloudFlare_DNS_Request($action, $DNS, $cfAPI, $page = 1)
     {
@@ -209,22 +223,22 @@ class FlareDNSClient
             try {
                 $resp = $requestClient->request($method, $uri, $sendDATA);
             } catch (ClientException $e) {
-                $response          = [];
+                $response = [];
 
                 $response['request'] = $e->getRequest();
 
                 if ($e->hasResponse()) {
                     $result = $e->getResponse()->getBody(true)->getContents();
-                    print_r($result);
-                    $response['result'] = $result; 
-                    $result = json_decode($result);
+                    //print_r($result);
+                    $response['result'] = $result;
+                    $result             = json_decode($result);
 
-                    if(isset($result->errors)){
+                    if (isset($result->errors)) {
                         $response['error'] = $result->errors;
                     }
                 }
 
-                print_r($response);
+                //print_r($response);
 
                 return $response;
             }
@@ -269,9 +283,9 @@ class FlareDNSClient
         try {
             $requestClient = new Client();
 
-            $method              = 'GET';
-            $ipR                 = $requestClient->request($method, $uri);
-            $ipBody              = trim($ipR->getBody());
+            $method = 'GET';
+            $ipR    = $requestClient->request($method, $uri);
+            $ipBody = trim($ipR->getBody());
 
             preg_match('/Current IP Address: \[?([:.0-9a-fA-F]+)\]?/', $ipBody, $m);
             $ip = '';
@@ -286,7 +300,7 @@ class FlareDNSClient
             if ($e->hasResponse()) {
                 $response['response'] = Psr7\str($e->getResponse());
             }
-            print_r($response);
+            //print_r($response);
 
             return $response;
         }
