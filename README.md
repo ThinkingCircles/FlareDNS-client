@@ -15,7 +15,20 @@ Use this package if:
 ```
 composer require thinkingcircles/flaredns-client
 
-php artisan vendor:publish
+```
+
+```php
+// config/app.php
+
+'providers' => [
+    // Other service providers...    
+    ThinkingCircles\FlareDNSClient\FlareDNSClientServiceProvider::class,
+]
+
+```
+
+```
+php artisan vendor:publish --provider="ThinkingCircles\FlareDNSClient\FlareDNSClientServiceProvider"
 
 ```
 
@@ -56,15 +69,7 @@ cloudflare_api_email=
 ```
 
 
-```php
-// config/app.php
 
-'providers' => [
-    // Other service providers...    
-    ThinkingCircles\FlareDNSClient\FlareDNSClientServiceProvider::class,
-]
-
-```
 
 
 ## Cron Setup - [Laravel 5.4 - Scheduling](https://laravel.com/docs/5.4/scheduling)
