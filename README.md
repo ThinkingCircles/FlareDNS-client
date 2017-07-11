@@ -15,7 +15,7 @@ Use this package if:
 ```
 composer require thinkingcircles/flaredns-client
 
-php artisan vendor:publish --provider="ThinkingCircles\FlareDNSClient\FlareDNSClientServiceProvider"
+php artisan vendor:publish
 
 ```
 
@@ -94,5 +94,4 @@ protected function schedule(Schedule $schedule)
 - [x] Debug
 - [ ] Clean up code
 - [ ] Improve logic 
-- [ ] Documentation
 - [ ] Make UI [FlareDNS Management UI](https://www.github.com/ThinkingCircles/FlareDNS "FlareDNS Management UI")
